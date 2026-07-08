@@ -36,16 +36,18 @@ export const uploadFile = asyncHandler(async (req, res) => {
 
 export const deleteFile = asyncHandler(async (req, res) => {
   const fileName = req.params.fileName;
+  const { user } = req;
+  console.log(fileName)
 
   if (!fileName) {
     throw new apiError(400, "File name is required");
   }
 
-  await minioClient.statObject(MINIO_BUCKET, fileName).catch(() => {
+  await minioClient.statObject(MINIO_BUCKET, `user-${user.UserId}-${fileName}`).catch(() => {
     throw new apiError(404, "File not found");
   });
 
-  await minioClient.removeObject(MINIO_BUCKET, fileName);
+  await minioClient.removeObject(MINIO_BUCKET, `user-${user.UserId}-${fileName}`);
 
   res.status(200).json(new apiResponse(200, null, "File deleted successfully"));
 });
@@ -71,6 +73,7 @@ export const getPresignedUrl = asyncHandler(async (req, res) => {
 export const downloadFile = asyncHandler(async (req, res) => {
   const { fileName } = req.params;
   const { user } = req;
+  console.log(fileName, user.UserId)
 
   if (!fileName) {
     throw new apiError(400, "File name is required");
