@@ -17,7 +17,7 @@ export const uploadFile = asyncHandler(async (req, res) => {
   let result;
 
   try {
-    result = await minioClient.fPutObject(MINIO_BUCKET, `user-${user.UserId}-${file.originalname}`, file.path, {
+    result = await minioClient.fPutObject(MINIO_BUCKET, `${file.originalname}`, file.path, {
       "Content-Type": file.mimetype,
     });
   } finally {
@@ -43,11 +43,11 @@ export const deleteFile = asyncHandler(async (req, res) => {
     throw new apiError(400, "File name is required");
   }
 
-  await minioClient.statObject(MINIO_BUCKET, `user-${user.UserId}-${fileName}`).catch(() => {
+  await minioClient.statObject(MINIO_BUCKET, `${fileName}`).catch(() => {
     throw new apiError(404, "File not found");
   });
 
-  await minioClient.removeObject(MINIO_BUCKET, `user-${user.UserId}-${fileName}`);
+  await minioClient.removeObject(MINIO_BUCKET, `${fileName}`);
 
   res.status(200).json(new apiResponse(200, null, "File deleted successfully"));
 });
@@ -79,11 +79,11 @@ export const downloadFile = asyncHandler(async (req, res) => {
     throw new apiError(400, "File name is required");
   }
 
-  const stat = await minioClient.statObject(MINIO_BUCKET, `user-${user.UserId}-${fileName}`).catch(() => {
+  const stat = await minioClient.statObject(MINIO_BUCKET, `${fileName}`).catch(() => {
     throw new apiError(404, "File not found");
   });
 
-  const fileStream = await minioClient.getObject(MINIO_BUCKET, `user-${user.UserId}-${fileName}`);
+  const fileStream = await minioClient.getObject(MINIO_BUCKET, `${fileName}`);
 
   res.setHeader("Content-Type", stat.metaData?.["content-type"] || "application/octet-stream");
   res.setHeader("Content-Disposition", `attachment; filename="${fileName.split("/").pop()}"`);
