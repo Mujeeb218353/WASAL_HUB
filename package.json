@@ -21,6 +21,7 @@
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.3",
     "minio": "^8.0.7",
+    "morgan": "^1.11.0",
     "multer": "^2.2.0",
     "path": "^0.12.7"
   }

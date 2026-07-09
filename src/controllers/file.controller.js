@@ -36,8 +36,6 @@ export const uploadFile = asyncHandler(async (req, res) => {
 
 export const deleteFile = asyncHandler(async (req, res) => {
   const fileName = req.params.fileName;
-  const { user } = req;
-  console.log(fileName)
 
   if (!fileName) {
     throw new apiError(400, "File name is required");
@@ -72,8 +70,6 @@ export const getPresignedUrl = asyncHandler(async (req, res) => {
 
 export const downloadFile = asyncHandler(async (req, res) => {
   const { fileName } = req.params;
-  const { user } = req;
-  console.log(fileName, user.UserId)
 
   if (!fileName) {
     throw new apiError(400, "File name is required");

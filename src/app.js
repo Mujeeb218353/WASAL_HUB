@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import path from "path";
+import morgan from "morgan";
 import { CORS_ORIGIN } from "./constant.js";
 import fileRoutes from "./routes/file.routes.js";
 
@@ -20,14 +21,10 @@ app.use(express.json());
 app.use(express.static(path.join(process.cwd(), 'public')));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
 app.get("/health", (_, res) => {
   res.send("App is healthy");
-});
-
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`);
-  next();
 });
 
 app.use("/api/v1/files", fileRoutes);

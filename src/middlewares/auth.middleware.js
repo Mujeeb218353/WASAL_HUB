@@ -25,13 +25,9 @@ const verifyUserJWT = asyncHandler(async (req, _, next) => {
 
     } catch (error) {
 
-      console.error(error)
+      console.error("Middleware Error 1:", error)
 
       fs.unlinkSync(req.file?.path || req.files?.[0]?.path || "");
-
-      if (error.name === "TokenExpiredError") {
-        throw new apiError(401, "Access token expired");
-      }
 
       throw new apiError(401, "Invalid access token");
 
@@ -63,7 +59,7 @@ const verifyUserJWT = asyncHandler(async (req, _, next) => {
       fs.unlinkSync(req.file?.path || req.files?.[0]?.path || "");
     }
 
-    console.log(error)
+    console.error("Middleware Error 2:", error)
 
     throw new apiError(401, error?.message || "Invalid access token");
   }
