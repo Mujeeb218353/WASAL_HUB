@@ -12,10 +12,10 @@ export const getFileName = (originalName) => {
 
   const ext = path.extname(originalName);
   const baseName = path.basename(originalName, ext);
-  const safeName = sanitizeFileName(baseName);
+  // const safeName = sanitizeFileName(baseName);
   const uniqueId = Date.now();
 
-  return `${safeName}-${uniqueId}${ext.toLowerCase()}`;
+  return `${baseName}-${uniqueId}${ext.toLowerCase()}`;
 };
 
 export const parseUploadedFileName = (file) => {
