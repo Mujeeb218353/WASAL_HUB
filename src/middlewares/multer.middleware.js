@@ -1,5 +1,6 @@
 import multer from "multer";
 import path from "path";
+import apiError from "../utils/api.error.util.js";
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -19,7 +20,7 @@ const upload = multer({
     if (file.mimetype.startsWith("image/") || file.mimetype === "application/pdf" ) {
       cb(null, true);
     } else {
-      cb(new Error("Only image and pdf files are allowed!"), false);
+      cb(new apiError(400, "Only image and pdf files are allowed!"), false);
     }
   },
 });

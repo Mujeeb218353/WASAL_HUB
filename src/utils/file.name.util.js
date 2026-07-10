@@ -7,8 +7,7 @@ export const sanitizeFileName = (name) => {
   return sanitized;
 };
 
-export const getFileName = (identifier, originalName) => {
-  if (!identifier) throw new apiError(400, "identifier is required");
+export const getFileName = (originalName) => {
   if (!originalName) throw new apiError(400, "originalName is required");
 
   const ext = path.extname(originalName);

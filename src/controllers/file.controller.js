@@ -5,6 +5,7 @@ import apiResponse from "../utils/api.response.util.js";
 import apiError from "../utils/api.error.util.js";
 import { MINIO_BUCKET } from "../constant.js";
 import fs from "fs";
+import { get } from "http";
 
 export const uploadFile = asyncHandler(async (req, res) => {
   const file = req.file;
@@ -16,8 +17,10 @@ export const uploadFile = asyncHandler(async (req, res) => {
 
   let result;
 
+  const fileName = getFileName(file.originalname);
+
   try {
-    result = await minioClient.fPutObject(MINIO_BUCKET, `${file.originalname}`, file.path, {
+    result = await minioClient.fPutObject(MINIO_BUCKET, `${fileName}`, file.path, {
       "Content-Type": file.mimetype,
     });
   } finally {
@@ -31,7 +34,7 @@ export const uploadFile = asyncHandler(async (req, res) => {
     throw new apiError(500, "File upload failed");
   }
 
-  res.status(200).json(new apiResponse(200, file?.originalname, "File uploaded successfully"));
+  res.status(200).json(new apiResponse(200, fileName, "File uploaded successfully"));
 });
 
 export const deleteFile = asyncHandler(async (req, res) => {
@@ -61,11 +64,11 @@ export const getPresignedUrl = asyncHandler(async (req, res) => {
     throw new apiError(404, "File not found");
   });
 
-  const presignedUrlExpiration = 60 * 60;
+  const presignedUrlExpiration = 5 * 60; // 
 
   const presignedUrl = await minioClient.presignedGetObject(MINIO_BUCKET, fileName, presignedUrlExpiration);
 
-  res.status(200).json(new apiResponse(200, { presignedUrl }, "Presigned URL generated successfully"));
+  res.status(200).json(new apiResponse(200, { downloadUrl: presignedUrl }, "Presigned URL generated successfully"));
 });
 
 export const downloadFile = asyncHandler(async (req, res) => {
